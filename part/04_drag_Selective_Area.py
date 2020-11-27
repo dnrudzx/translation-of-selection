@@ -20,16 +20,24 @@ def draw_selective_area(event, x, y, flags, param):
             Lbtn_Down = False
             width = x - x_start
             height = y - y_start
-            if width < 0:
-                width = x_start
-                x_start = x
-            if height < 0:
-                height = y_start
-                y_start = y
+
+            rect = [-1, -1, -1, -1]
+            if height > 0:
+                rect[0] = y_start
+                rect[1] = y_start + height
+            else:
+                rect[0] = y
+                rect[1] = y_start
+            if width > 0:
+                rect[2] = x_start
+                rect[3] = x_start + width
+            else:
+                rect[2] = x
+                rect[3] = x_start
             if width != 0 and height != 0:
-                roi = img[y_start:y_start+height, x_start:x_start+width]
+                roi = img[rect[0]:rect[1], rect[2]:rect[3]]
                 cv2.imshow('select_area', roi)
-                cv2.moveWindow('select_area', 0, 0)
+                #cv2.moveWindow('select_area', 0, 0)
                 cv2.imwrite('./select_area.png', roi)
 
 img = cv2.imread('./capture.png')
